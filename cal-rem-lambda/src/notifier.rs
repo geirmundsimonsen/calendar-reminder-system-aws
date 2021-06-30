@@ -24,14 +24,14 @@ pub async fn run_notifier() -> Result<(), Error> {
         notification.msg.clone()
     }).collect();
 
-    let matrix = Matrix { server: var("MATRIX_SERVER")? };
-
-    matrix.authenticate_and_send_messages_to_room(
+    if messages.len() > 0 {
+        Matrix { server: var("MATRIX_SERVER")? }.authenticate_and_send_messages_to_room(
         &var("MATRIX_USER")?,
         &var("MATRIX_PW")?,
         &var("MATRIX_REMINDER_ROOM")?,
         messages
     ).await;
+    }
 
     save_string_as_object(now.to_string(), var("S3_MAIN_BUCKET")?, "notification-last-run-timestamp.txt".to_string()).await?;
 
