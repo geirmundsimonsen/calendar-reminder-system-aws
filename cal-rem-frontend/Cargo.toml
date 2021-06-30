@@ -1,6 +1,6 @@
 [package]
 version = "0.1.0"
-name = "cal-rem-wasm"
+name = "cal-rem-frontend"
 repository = "https://github.com/seed-rs/seed-quickstart"
 authors = ["Geirmund Simonsen <geirmund.simonsen@gmail.com>"]
 description = "App Description"

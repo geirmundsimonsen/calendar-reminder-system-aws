@@ -5,8 +5,8 @@
         "cal-rem-lambda/target": true,
         "cal-rem-shared/Cargo.lock": true,
         "cal-rem-shared/target": true,
-        "cal-rem-wasm/Cargo.lock": true,
-        "cal-rem-wasm/pkg": true,
-        "cal-rem-wasm/target": true
+        "cal-rem-frontend/Cargo.lock": true,
+        "cal-rem-frontend/pkg": true,
+        "cal-rem-frontend/target": true
     }
 }

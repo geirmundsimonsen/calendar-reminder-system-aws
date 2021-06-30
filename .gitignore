@@ -1,8 +1,8 @@
 /bin
 /bin-lambda
 /cal-rem-lambda/target
-/cal-rem-wasm/Cargo.lock
-/cal-rem-wasm/target
+/cal-rem-frontend/Cargo.lock
+/cal-rem-frontend/target
 /cal-rem-shared/Cargo.lock
 /cal-rem-shared/target
 *.bat
