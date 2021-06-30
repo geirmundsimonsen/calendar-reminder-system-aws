@@ -24,7 +24,7 @@ pub async fn run_notifier() -> Result<(), Error> {
         notification.msg.clone()
     }).collect();
 
-    let matrix = Matrix { server: var("MATRIX_ROOM")? };
+    let matrix = Matrix { server: var("MATRIX_SERVER")? };
 
     matrix.authenticate_and_send_messages_to_room(
         &var("MATRIX_USER")?,
