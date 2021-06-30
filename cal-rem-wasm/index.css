@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@100&display=swap');
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	min-width: 360px;
+	max-width: 1080px;
+	margin: 0 auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes todo-marquee {
+	from {
+		margin-left: 0px;
+	}
+	to {
+		margin-left: -50%;
+	}
+}

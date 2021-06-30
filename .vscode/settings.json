@@ -1,0 +1,12 @@
+{
+    "files.exclude": {
+        "bin": true,
+        "bin-lambda": true,
+        "cal-rem-lambda/target": true,
+        "cal-rem-wasm-com/Cargo.lock": true,
+        "cal-rem-wasm-com/target": true,
+        "cal-rem-wasm/Cargo.lock": true,
+        "cal-rem-wasm/pkg": true,
+        "cal-rem-wasm/target": true
+    }
+}
