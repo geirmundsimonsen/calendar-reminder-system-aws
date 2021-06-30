@@ -4,8 +4,8 @@ use chrono_tz::{Tz, Europe::Oslo};
 
 #[derive(Serialize, Deserialize)]
 pub enum Command {
-    GET_TODO_ENTRIES,
-    GET_CALENDAR_EVENTS,
+    GetTodoEntries,
+    GetCalendarEvents,
 }
 
 #[derive(Serialize, Deserialize)]

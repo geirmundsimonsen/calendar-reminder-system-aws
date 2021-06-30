@@ -32,7 +32,7 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
     match msg {
         Msg::CalendarEntryRequest => {
             orders.skip().perform_cmd(async {
-                let req_body = RequestBody { command: Command::GET_CALENDAR_EVENTS, parameters: "".to_string() };
+                let req_body = RequestBody { command: Command::GetCalendarEvents, parameters: "".to_string() };
                 let req = Request::new("https://97g5b34p9e.execute-api.eu-north-1.amazonaws.com/default/calendar-reminder-api-functions").method(Method::Post).json(&req_body).unwrap();
 
                 let response = req.fetch().await.expect("HTTP request failed");
@@ -45,7 +45,7 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
         },
         Msg::TodoEntryRequest => {
             orders.skip().perform_cmd(async {
-                let req_body = RequestBody { command: Command::GET_TODO_ENTRIES, parameters: "".to_string() };
+                let req_body = RequestBody { command: Command::GetTodoEntries, parameters: "".to_string() };
                 let req = Request::new("https://97g5b34p9e.execute-api.eu-north-1.amazonaws.com/default/calendar-reminder-api-functions").method(Method::Post).json(&req_body).unwrap();
                 
                 let response = req.fetch().await.expect("HTTP request failed");

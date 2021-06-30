@@ -106,8 +106,8 @@ async fn my_handler(event: Event, _ctx: Context) -> Result<Response, Error> {
             let body: RequestBody = serde_json::from_str(&api_gateway_request.body.unwrap())?;
         
             let body = match body.command {
-                Command::GET_TODO_ENTRIES => get_todo_entries().await?,
-                Command::GET_CALENDAR_EVENTS => get_calendar_events().await?,
+                Command::GetTodoEntries => get_todo_entries().await?,
+                Command::GetCalendarEvents => get_calendar_events().await?,
             };
         
             return Ok(Response { status_code: 200, headers: Headers {
