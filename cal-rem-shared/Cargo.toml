@@ -1,5 +1,5 @@
 [package]
-name = "cal-rem-wasm-com"
+name = "cal-rem-shared"
 version = "0.1.0"
 authors = ["Geirmund Simonsen <geirmund.simonsen@gmail.com>"]
 edition = "2018"

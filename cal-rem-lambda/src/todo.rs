@@ -1,6 +1,6 @@
 use lambda_runtime::Error;
 use std::env::var;
-use cal_rem_wasm_com::Todo;
+use cal_rem_shared::Todo;
 use crate::s3::get_object_as_string;
 
 pub async fn get_todo_entries() -> Result<String, Error> {

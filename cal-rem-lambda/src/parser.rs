@@ -4,7 +4,7 @@ use regex::Regex;
 use lambda_runtime::Error;
 use crate::s3::get_object_as_string;
 
-use cal_rem_wasm_com::{Entry, Month, HourMinute};
+use cal_rem_shared::{Entry, Month, HourMinute};
 
 fn year_regex(unparsed_entry: &str) -> Option<u32> {
     lazy_static! {

@@ -101,7 +101,7 @@ checksum = "b700ce4376041dcd0a327fd0097c41095743c4c8af8887265942faf1100bd040"
 name = "cal-rem-lambda"
 version = "0.1.0"
 dependencies = [
- "cal-rem-wasm-com",
+ "cal-rem-shared",
  "chrono",
  "chrono-tz",
  "futures",
@@ -121,7 +121,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "cal-rem-wasm-com"
+name = "cal-rem-shared"
 version = "0.1.0"
 dependencies = [
  "chrono",

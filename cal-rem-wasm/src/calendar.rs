@@ -1,6 +1,6 @@
 use seed::{prelude::*, *};
 use chrono::{Datelike, Weekday};
-use cal_rem_wasm_com::{Entry, Month};
+use cal_rem_shared::{Entry, Month};
 use crate::Msg;
 
 pub fn future_calendar_nodes_from_entries(entries: &Vec<Entry>) -> Vec<Node<Msg>> {

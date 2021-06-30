@@ -2,7 +2,7 @@ use chrono::prelude::*;
 use chrono::Duration;
 use chrono_tz::Tz;
 
-use cal_rem_wasm_com::Entry;
+use cal_rem_shared::Entry;
 
 #[derive(Debug, Clone)]
 pub struct Notification {

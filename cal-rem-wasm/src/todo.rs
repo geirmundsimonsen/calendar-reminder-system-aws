@@ -1,5 +1,5 @@
 use seed::{prelude::*, *};
-use cal_rem_wasm_com::Todo;
+use cal_rem_shared::Todo;
 use crate::Msg;
 
 pub fn sliding_todo(todo_list: &Vec<Todo>) -> Node<Msg> {

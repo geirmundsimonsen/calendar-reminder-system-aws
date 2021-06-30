@@ -23,7 +23,7 @@ reqwest = { version = "0.11", features = ["json"] }
 chrono = "0.4.19"
 chrono-tz = "0.5"
 rand = { version = "0.8.3", features = ["small_rng"] }
-cal-rem-wasm-com = { path = "../cal-rem-wasm-com" }
+cal-rem-shared = { path = "../cal-rem-shared" }
 
 [[bin]]
 name = "bootstrap"

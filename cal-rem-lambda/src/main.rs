@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use lambda_runtime::{handler_fn, Context, Error};
 use log::LevelFilter;
 use simple_logger::SimpleLogger;
-use cal_rem_wasm_com::{Command, RequestBody};
+use cal_rem_shared::{Command, RequestBody};
 use crate::todo::get_todo_entries;
 use crate::calendar::get_calendar_events;
 use crate::notifier::run_notifier;

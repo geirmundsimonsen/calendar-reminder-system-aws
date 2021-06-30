@@ -18,7 +18,7 @@ wasm-bindgen-test = "0.3.18"
 [dependencies]
 seed = "0.8.0"
 chrono = "0.4.19"
-cal-rem-wasm-com = { path = "../cal-rem-wasm-com" }
+cal-rem-shared = { path = "../cal-rem-shared" }
 
 [profile.release]
 lto = true
