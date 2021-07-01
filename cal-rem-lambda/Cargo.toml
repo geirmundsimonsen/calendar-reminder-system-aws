@@ -14,8 +14,8 @@ serde_json = "^1"
 serde_derive = "^1"
 log = "^0.4"
 simple_logger = "^1"
-rusoto_core = "0.46.0"
-rusoto_s3 = "0.46.0"
+rusoto_core = "0.47.0"
+rusoto_s3 = "0.47.0"
 futures = "0.3.15"
 regex = "1.5"
 lazy_static = "1.4.0"
@@ -23,6 +23,7 @@ reqwest = { version = "0.11", features = ["json"] }
 chrono = "0.4.19"
 chrono-tz = "0.5"
 rand = { version = "0.8.3", features = ["small_rng"] }
+dynamodb = { git = "https://github.com/awslabs/aws-sdk-rust", tag = "v0.0.10-alpha", package = "aws-sdk-dynamodb" }
 cal-rem-shared = { path = "../cal-rem-shared" }
 
 [[bin]]

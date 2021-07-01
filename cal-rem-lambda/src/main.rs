@@ -8,12 +8,13 @@ use crate::calendar::get_calendar_events;
 use crate::notifier::run_notifier;
 
 mod calendar;
-mod todo;
-mod parser;
+mod dynamodb;
 mod matrix;
 mod notifier;
 mod notify;
+mod parser;
 mod s3;
+mod todo;
 
 /*
 ApiGateway Request:
