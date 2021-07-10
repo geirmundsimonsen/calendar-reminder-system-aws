@@ -1,8 +1,10 @@
-use serde::{Deserialize, Serialize};
+use cal_rem_shared::{Command, RequestBody};
 use lambda_runtime::{handler_fn, Context, Error};
 use log::LevelFilter;
+use maplit::hashmap;
+use serde::{Deserialize, Serialize};
 use simple_logger::SimpleLogger;
-use cal_rem_shared::{Command, RequestBody};
+use std::collections::HashMap;
 use crate::todo::get_todo_entries;
 use crate::calendar::get_calendar_events;
 use crate::notifier::run_notifier;
@@ -48,28 +50,34 @@ pub struct CloudWatchEvent {
 #[derive(Serialize, Deserialize)]
 pub struct ApiGatewayRequest {
     pub body: Option<String>,
-    pub headers: std::collections::HashMap<String, String>,
+    pub headers: HashMap<String, String>,
     #[serde(rename = "httpMethod")]
     pub http_method: String,
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct Headers {
-    #[serde(rename = "Content-Type")]
-    pub content_type: String,
-    #[serde(rename = "Access-Control-Allow-Origin")]
-    pub access_control_allow_origin: String,
+#[derive(Serialize, Deserialize, Hash, Eq, PartialEq)]
+pub enum Header {
     #[serde(rename = "Access-Control-Allow-Headers")]
-    pub access_control_allow_headers: String,
+    AccessControlAllowHeaders,
     #[serde(rename = "Access-Control-Allow-Methods")]
-    pub access_control_allow_methods: String,
+    AccessControlAllowMethods,
+    #[serde(rename = "Access-Control-Allow-Origin")]
+    AccessControlAllowOrigin,
+    #[serde(rename = "Cache-Control")]
+    CacheControl,
+    #[serde(rename = "Content-Type")]
+    ContentType,
+    ETag,
+    Expires,
+    #[serde(rename = "Last-Modified")]
+    LastModified,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct Response {
     #[serde(rename = "statusCode")]
     pub status_code: u32,
-    pub headers: Headers,
+    pub headers: HashMap<Header, String>,
     pub body: String,
 }
 
@@ -85,21 +93,21 @@ async fn my_handler(event: Event, _ctx: Context) -> Result<Response, Error> {
     return match event {
         Event::CloudWatchEvent(_cloud_watch_event) => {
             run_notifier().await?;
-            Ok(Response { status_code: 200, headers: Headers {
-                content_type: "application/json".to_string(),
-                access_control_allow_origin: "*".to_string(),
-                access_control_allow_headers: "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
-                access_control_allow_methods: "OPTIONS,POST,GET".to_string()
+            Ok(Response { status_code: 200, headers: hashmap! {
+                Header::ContentType => "application/json".to_string(),
+                Header::AccessControlAllowOrigin => "*".to_string(),
+                Header::AccessControlAllowHeaders => "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
+                Header::AccessControlAllowMethods => "OPTIONS,POST,GET".to_string(),
             }, body: "".to_string()})
         },
         Event::ApiGatewayRequest(api_gateway_request) => {
             if api_gateway_request.body.is_none() {
                 if api_gateway_request.http_method == "OPTIONS" {
-                    return Ok(Response { status_code: 200, headers: Headers {
-                        content_type: "application/json".to_string(),
-                        access_control_allow_origin: "*".to_string(),
-                        access_control_allow_headers: "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
-                        access_control_allow_methods: "OPTIONS,POST,GET".to_string()
+                    return Ok(Response { status_code: 200, headers: hashmap! {
+                        Header::ContentType => "application/json".to_string(),
+                        Header::AccessControlAllowOrigin => "*".to_string(),
+                        Header::AccessControlAllowHeaders => "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
+                        Header::AccessControlAllowMethods => "OPTIONS,POST,GET".to_string(),
                     }, body: "".to_string()})
                 }
             }
@@ -110,12 +118,18 @@ async fn my_handler(event: Event, _ctx: Context) -> Result<Response, Error> {
                 Command::GetTodoEntries => get_todo_entries().await?,
                 Command::GetCalendarEvents => get_calendar_events().await?,
             };
-        
-            return Ok(Response { status_code: 200, headers: Headers {
-                content_type: "application/json".to_string(),
-                access_control_allow_origin: "*".to_string(),
-                access_control_allow_headers: "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
-                access_control_allow_methods: "OPTIONS,POST,GET".to_string()
+
+            if let Some(etag) = api_gateway_request.headers.get("If-None-Match") { println!("if none match! {}", etag) }
+
+            return Ok(Response { status_code: 200, headers: hashmap! {
+                Header::ContentType => "application/json".to_string(),
+                //Header::CacheControl => "max-age=3600000, must-revalidate".to_string(),
+                //Header::LastModified => "Mon, 29 Jun 1998 02:28:12 GMT".to_string(),
+                //Header::ETag => "1234".to_string(),
+                //Header::Expires => "Mon, 26 Jul 2021 02:28:12 GMT".to_string(),
+                Header::AccessControlAllowOrigin => "*".to_string(),
+                Header::AccessControlAllowHeaders => "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
+                Header::AccessControlAllowMethods => "OPTIONS,POST,GET".to_string(),
             }, body})
         }
     }

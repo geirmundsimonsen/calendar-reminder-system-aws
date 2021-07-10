@@ -22,6 +22,7 @@ chrono = "0.4.19"
 chrono-tz = "0.5"
 rand = { version = "0.8.3", features = ["small_rng"] }
 bytes = "1"
+maplit = "1.0.2"
 dynamodb = { git = "https://github.com/awslabs/aws-sdk-rust", tag = "v0.0.10-alpha", package = "aws-sdk-dynamodb" }
 s3 = { git = "https://github.com/awslabs/aws-sdk-rust", tag = "v0.0.10-alpha", package = "aws-sdk-s3" }
 cal-rem-shared = { path = "../cal-rem-shared" }
