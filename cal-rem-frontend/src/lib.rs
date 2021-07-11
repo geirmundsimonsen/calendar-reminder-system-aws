@@ -5,7 +5,6 @@ mod todo;
 
 use seed::{prelude::*, *};
 use cal_rem_shared::{Entry, Todo};
-use cal_rem_shared::{Command, RequestBody};
 use crate::calendar::{future_calendar_nodes_from_entries, todays_date_description};
 use crate::todo::sliding_todo;
 

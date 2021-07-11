@@ -1,6 +1,7 @@
 use lambda_runtime::Error;
 use std::env::var;
 use crate::{Header, Response, get_default_headers, s3::{BrowserCachedData, get_object_as_string_if_etags_differ}};
+use cal_rem_shared::Todo;
 
 pub async fn get_todo_entries(etag: Option<String>) -> Result<Response, Error> {
     let cached_data = get_object_as_string_if_etags_differ(var("S3_MAIN_BUCKET")?, "todo.txt".to_string(), etag).await?;
@@ -13,7 +14,8 @@ pub async fn get_todo_entries(etag: Option<String>) -> Result<Response, Error> {
         },
         BrowserCachedData::NotInCache { data, etag } => {
             headers.insert(Header::ETag, etag);
-            Response { status_code: 200, headers, body: serde_json::to_string(&parse_todo_file(&data))?}
+            let todos: Vec<Todo> = parse_todo_file(&data).iter().map(|todo| Todo { description: todo.clone(), done: true }).collect();
+            Response { status_code: 200, headers, body: serde_json::to_string(&todos)?}
         }
     })
 }
