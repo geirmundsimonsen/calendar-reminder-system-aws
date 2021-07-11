@@ -7,7 +7,7 @@ use crate::matrix::Matrix;
 use crate::notify::{create_notifications_from_calendar, get_notifications_within_time_window};
 use crate::parser::parse_calendar_file;
 use crate::s3::get_object_as_string;
-use crate::todo::get_todo_entries_from_aws;
+use crate::todo::parse_todo_file;
 
 
 pub async fn run_notifier() -> Result<(), Error> {
@@ -29,7 +29,7 @@ pub async fn run_notifier() -> Result<(), Error> {
         let mut rng = SmallRng::from_entropy();
         let now = Utc::now();
         if now.hour() > 8 && now.hour() < 23 && rng.gen::<f64>() < 1.0/60.0 {
-            let mut todo_entries = get_todo_entries_from_aws().await?;
+            let mut todo_entries = parse_todo_file(&get_object_as_string(var("S3_MAIN_BUCKET")?, "todo.txt".to_string()).await?);
             todo_entries.shuffle(&mut rng);
             todo_entries.first().map(|entry| messages.push(entry.clone()));
         }

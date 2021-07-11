@@ -5,11 +5,11 @@ use crate::parser::parse_calendar_file;
 use crate::s3::{BrowserCachedData, get_object_as_string_if_etags_differ};
 
 pub async fn get_calendar_events(etag: Option<String>) -> Result<Response, Error> {
-    let str = get_object_as_string_if_etags_differ(var("S3_MAIN_BUCKET")?, "calendar.txt".to_string(), etag).await?;
+    let cached_data = get_object_as_string_if_etags_differ(var("S3_MAIN_BUCKET")?, "calendar.txt".to_string(), etag).await?;
 
     let mut headers = get_default_headers();
 
-    Ok(match str {
+    Ok(match cached_data {
         BrowserCachedData::InCache => {
             Response { status_code: 304, headers, body: "".to_string()}
         },
