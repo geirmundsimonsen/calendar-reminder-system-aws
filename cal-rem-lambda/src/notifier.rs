@@ -5,8 +5,10 @@ use std::env::var;
 use crate::dynamodb::{get_value_from_cache, store_value_in_cache};
 use crate::matrix::Matrix;
 use crate::notify::{create_notifications_from_calendar, get_notifications_within_time_window};
-use crate::parser::get_calendar_entries_from_file;
+use crate::parser::parse_calendar_file;
+use crate::s3::get_object_as_string;
 use crate::todo::get_todo_entries_from_aws;
+
 
 pub async fn run_notifier() -> Result<(), Error> {
     let now = Utc::now().timestamp();
@@ -15,8 +17,8 @@ pub async fn run_notifier() -> Result<(), Error> {
         .map_or(now - 3600, |s| {
             s.parse::<i64>().unwrap_or(now - 3600)
         });
-        
-    let notifications = create_notifications_from_calendar(&get_calendar_entries_from_file().await?);
+
+    let notifications = create_notifications_from_calendar(&parse_calendar_file(&get_object_as_string(var("S3_MAIN_BUCKET")?, "calendar.txt".to_string()).await?));
     let notifications_within_time_window = get_notifications_within_time_window(&notifications, Utc::now().timestamp(), previous_now);
     
     let mut messages: Vec<String> = notifications_within_time_window.iter().map(|notification| {

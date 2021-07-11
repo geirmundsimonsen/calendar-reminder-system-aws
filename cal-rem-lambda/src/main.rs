@@ -1,4 +1,3 @@
-use cal_rem_shared::{Command, RequestBody};
 use lambda_runtime::{handler_fn, Context, Error};
 use log::LevelFilter;
 use maplit::hashmap;
@@ -115,13 +114,13 @@ async fn my_handler(event: Event, _ctx: Context) -> Result<Response, Error> {
 
             println!("{:?}", api_gateway_request.headers);
 
-            if let Some(etag) = api_gateway_request.headers.get("if-none-match") { println!("if none match! {}", etag) }
+            let etag = api_gateway_request.headers.get("if-none-match").and_then(|str| Some(str.clone()));
         
             if api_gateway_request.http_method == "GET" {
                 println!("{}", api_gateway_request.path);
                 let body = match api_gateway_request.path.as_str() {
                     "/get-all-calendar-entries" => {
-                        get_calendar_events().await?
+                        return get_calendar_events(etag).await
                     },
                     "/get-all-todo-entries" => {
                         get_todo_entries().await?

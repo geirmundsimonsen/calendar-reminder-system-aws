@@ -1,9 +1,5 @@
 use lazy_static::lazy_static;
-use std::env::var;
 use regex::Regex;
-use lambda_runtime::Error;
-use crate::s3::get_object_as_string;
-
 use cal_rem_shared::{Entry, Month, HourMinute};
 
 fn year_regex(unparsed_entry: &str) -> Option<u32> {
@@ -141,13 +137,11 @@ fn event_entry_regex(unparsed_entry: &str, year: u32, month: Month) -> Option<En
     return Some(entry)
 }
 
-pub async fn get_calendar_entries_from_file() -> Result<Vec<Entry>, Error> {
-    let str = &get_object_as_string(var("S3_MAIN_BUCKET")?, "calendar.txt".to_string()).await?;
-
+pub fn parse_calendar_file(file: &String) -> Vec<Entry> {
     let mut year: Option<u32> = None;
     let mut month: Option<Month> = None;
 
-    Ok(str.split("\n").filter_map(|line| {
+    file.split("\n").filter_map(|line| {
         year_regex(line).map(|y| year = Some(y));
         month_regex(line).map(|m| month = Some(m));
         if year.is_some() && month.is_some() {
@@ -155,7 +149,7 @@ pub async fn get_calendar_entries_from_file() -> Result<Vec<Entry>, Error> {
         } else {
             None
         }
-    }).collect())
+    }).collect()
 }
 
 #[cfg(test)]
