@@ -93,26 +93,14 @@ async fn my_handler(event: Event, _ctx: Context) -> Result<Response, Error> {
     return match event {
         Event::CloudWatchEvent(_cloud_watch_event) => {
             run_notifier().await?;
-            Ok(Response { status_code: 200, headers: hashmap! {
-                Header::ContentType => "application/json".to_string(),
-                Header::AccessControlAllowOrigin => "*".to_string(),
-                Header::AccessControlAllowHeaders => "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
-                Header::AccessControlAllowMethods => "OPTIONS,POST,GET".to_string(),
-            }, body: "".to_string()})
+            Ok(Response { status_code: 200, headers: get_default_headers(), body: "".to_string()})
         },
         Event::ApiGatewayRequest(api_gateway_request) => {
             if api_gateway_request.body.is_none() {
                 if api_gateway_request.http_method == "OPTIONS" {
-                    return Ok(Response { status_code: 200, headers: hashmap! {
-                        Header::ContentType => "application/json".to_string(),
-                        Header::AccessControlAllowOrigin => "*".to_string(),
-                        Header::AccessControlAllowHeaders => "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
-                        Header::AccessControlAllowMethods => "OPTIONS,POST,GET".to_string(),
-                    }, body: "".to_string()})
+                    return Ok(Response { status_code: 200, headers: get_default_headers(), body: "".to_string()})
                 }
             }
-
-            println!("{:?}", api_gateway_request.headers);
 
             let etag = api_gateway_request.headers.get("if-none-match").and_then(|str| Some(str.clone()));
         
@@ -126,34 +114,23 @@ async fn my_handler(event: Event, _ctx: Context) -> Result<Response, Error> {
                         get_todo_entries().await?
                     },
                     _ => {
-                        return Ok(Response { status_code: 404, headers: hashmap! {
-                            Header::ContentType => "application/json".to_string(),
-                            Header::AccessControlAllowOrigin => "*".to_string(),
-                            Header::AccessControlAllowHeaders => "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
-                            Header::AccessControlAllowMethods => "OPTIONS,POST,GET".to_string(),
-                        }, body: "Resource not found".to_string()})
+                        return Ok(Response { status_code: 404, headers: get_default_headers(), body: "Resource not found".to_string()})
                     }
                 };
 
-                return Ok(Response { status_code: 200, headers: hashmap! {
-                    Header::ContentType => "application/json".to_string(),
-                    Header::ETag => "\"1234\"".to_string(),
-                    Header::AccessControlAllowOrigin => "*".to_string(),
-                    Header::AccessControlAllowHeaders => "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
-                    Header::AccessControlAllowMethods => "OPTIONS,POST,GET".to_string(),
-                }, body})
+                return Ok(Response { status_code: 200, headers: get_default_headers(), body})
             }
 
-            return Ok(Response { status_code: 404, headers: hashmap! {
-                Header::ContentType => "application/json".to_string(),
-                //Header::CacheControl => "max-age=3600000, must-revalidate".to_string(),
-                //Header::LastModified => "Mon, 29 Jun 1998 02:28:12 GMT".to_string(),
-                //Header::ETag => "1234".to_string(),
-                //Header::Expires => "Mon, 26 Jul 2021 02:28:12 GMT".to_string(),
-                Header::AccessControlAllowOrigin => "*".to_string(),
-                Header::AccessControlAllowHeaders => "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
-                Header::AccessControlAllowMethods => "OPTIONS,POST,GET".to_string(),
-            }, body: "Unknown command from client".to_string()})
+            return Ok(Response { status_code: 404, headers: get_default_headers(), body: "Unknown command from client".to_string()})
         }
+    }
+}
+
+pub fn get_default_headers() -> HashMap<Header, String> {
+    hashmap! {
+        Header::ContentType => "application/json".to_string(),
+        Header::AccessControlAllowOrigin => "*".to_string(),
+        Header::AccessControlAllowHeaders => "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token".to_string(),
+        Header::AccessControlAllowMethods => "OPTIONS,POST,GET".to_string(),
     }
 }
